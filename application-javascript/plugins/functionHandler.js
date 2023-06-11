@@ -111,6 +111,7 @@ const f = {
 	}
 }
 
+// eventHandler(context, event)
 function handler(ctx, event) {
         try {
                 const asset = JSON.parse(event.payload.toString('utf8'));

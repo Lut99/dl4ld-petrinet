@@ -354,6 +354,7 @@ function submit(ctx, name, ...args) {
 	});
 }
 
+// Define events: CompleteTransition, PutToken, RemoveToken, Fire, etc
 function eventHandler(ctx, event) {
 	try {
 		const asset = JSON.parse(event.payload.toString('utf8'));
