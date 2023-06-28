@@ -9,10 +9,10 @@
 
 #### plugins
 - functionHandler.js
-  - Def the functions of transitions
+  - Def the functions of actions of transitions
 - webhookHandler.js
 
-#### **orgipetrinet_config.json**
+#### **orgXpetrinet_config.json**
 - Define Petri nets (the workflow)
 - Assets of all the parties: places, tokens, transitions
 > Currently, the last transition is generate authorization token. **TODO: amend this transition**
@@ -21,8 +21,10 @@
 
 #### **app.js**
 - the "main" function for deploy petriNet on server (create all the assets) and run
+  + socket: connet to the webserver
+  + **console**: the hyperledger
 - Define events in "eventHandler(ctx, event)"
-  - Define events: CompleteTransition, PutToken, RemoveToken, Fire, etc
+  - Define events: CompleteTransition, PutToken, RemoveToken, Fire
   - After event accomplished, emit the message from the queue
 - Lots of constant are defined in other files "'../../test-application3/javascript/CAUtil.js'"
 - Environmental files?
@@ -40,3 +42,12 @@
 - where is the blockchain layer?
 - todo: need to download other additional files
 
+# Ideas
+### Define Petri nets assets in org1petrinet_cionfig.json
+> places, transitions(actions "cmd"), token (Personal token to activate, auth-token), arcs(id of other assets)
+
+### Define events of Petri nets
+> CompleteTransition, PutToken, RemoveToken, Fire; Emit to the console
+
+### With network-lab/mqtt_listener/mqtt_listener.js
+> listen to the console, execute the corresponding "cmd" through mqtt
