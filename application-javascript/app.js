@@ -261,6 +261,7 @@ function showTransactionData(transactionData) {
 	}
 }
 
+// Define events: CompleteTransition
 async function completeTransition(ctx, netId, transitionId, tokenIds, outputData) {
 	try {
 		console.log(`${GREEN}--> Submit Transaction: completeTransition, ${transitionId}, ${netId} with output tokens ${tokenIds}`);
@@ -354,7 +355,6 @@ function submit(ctx, name, ...args) {
 	});
 }
 
-// Define events: CompleteTransition, PutToken, RemoveToken, Fire, etc
 function eventHandler(ctx, event) {
 	try {
 		const asset = JSON.parse(event.payload.toString('utf8'));
