@@ -1,5 +1,7 @@
 # Petrinet Smart Contract
 
+**Note: We will soon change this with a new use-case**
+
 First get a fabric test network running by following th fabric online docs.
 
 ```
