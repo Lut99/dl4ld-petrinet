@@ -1,6 +1,6 @@
 # Petrinet Smart Contract
 
-**Note: We will soon change this with a new use-case**
+**Note: We will soon change this with a new use-case; Test Xin**
 
 First get a fabric test network running by following th fabric online docs.
 
