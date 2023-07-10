@@ -16,9 +16,10 @@ async function putAssetJSON(ctx, key, asset) {
 }
 
 function getOutputsById(net, id) {
+  //Todo: get the destination based on arc's id
   return net.arcs
     .filter((arc) => {
-      return arc.src.id === id;
+      return arc.src.id === id; //strict comparison: same type (as well as the same value)
     })
     .map((arc) => {
       return arc.dst;
@@ -26,6 +27,7 @@ function getOutputsById(net, id) {
 }
 
 function getInputsById(net, id) {
+  //Todo: get the source based on arc's id
   return net.arcs
     .filter((arc) => {
       return arc.dst.id === id;
@@ -36,8 +38,8 @@ function getInputsById(net, id) {
 }
 
 function isSpaceInPlace(net, place) {
-  // Validate place for k-boundedness
-  return place.tokens.length < net.k;
+  //TODO: Check if Place can accept tokens.
+  return place.tokens.length < net.k; // net.k = 1; each place can only accept 1 token
 }
 
 function isEmpty(obj) {
@@ -246,11 +248,11 @@ class Petrinet extends Contract {
             'transition',
             a.dst.id,
           ]);
-          const t = await ctx.stub.getState(k);
+          const t = await ctx.stub.getState(k); // The array of transitions that triggered by the token
           if (!t || t.length === 0) {
             throw new Error(`Transition ${a.dst.id} does not exist.`);
           } else {
-            const transition = JSON.parse(t);
+            const transition = JSON.parse(t); // convert text into a JavaScript object
             if (transition.status === 'FIRING') {
               //throw new Error(`Transition ${a.dst.id} is already firing.`);
             }
@@ -264,7 +266,7 @@ class Petrinet extends Contract {
             inputPlacesAsAsset.forEach((p) => {
               inputTokens = inputTokens.concat(p.tokens);
             });
-            inputTokens.push(token);
+            inputTokens.push(token); // Add the token to the firing transition
 
             await ctx.stub.putState(k, Buffer.from(JSON.stringify(transition)));
             transition.outputs = getOutputsById(net, transitionId);

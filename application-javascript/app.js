@@ -293,7 +293,7 @@ async function createAndMoveToken(ctx, netId, placeId) {
 	async.retry({times:50, interval: 5000}, function(cb){
 		console.log(`${GREEN}--> Submit Transaction: PutToken`);
 		const transaction = ctx.contract.createTransaction('PutToken');
-		transaction.submit(tokenId, netId, placeId)
+		transaction.submit(tokenId, netId, placeId) // petrinet.js: PutToken(ctx, tokenId, netId, placeId)
 			.then(resultBuffer => {
 				const asset = resultBuffer.toString('utf8');
 				console.log(`${GREEN}<-- Submit PutToken Result: committed, asset ${asset}`);
