@@ -60,6 +60,7 @@
 > Most likely, it also takes this petrinet instance and runs it, creating the events used in `application-javascript` and by the network repository to run the `cmd` in containers
 ##### Define the class of Petrinet (Line 118+) and help functions (Line 118-) 
 - const events records the remarks
+- //TODO: there should be a webpage container that using help function "GenerateToken"
 ##### Methods of class Petrinet
 - PutToken
   - Line 190: put the token into place _i_
@@ -68,10 +69,17 @@
   - Line 271: update blockchain state by "ctx.stub.putState"
   - Return the transitions that are firing
 - CompleteTransition
-  - 
-- CreateWebhookTransition
+  - Line 328-355: Remove the token from the inplace which triggers the transition
+  - Line 358-404: Put the token at the outplace of the transition 
+    - Line 372-386: **generate token**. //TODO: use generate token for the evaluation, instead of use tokenArray.pop()
+  - Line 406-472: record the transition that is to be fired
+  - Line 480-505: record the fired transition
+    > In petrinet.js, "Fire" is pushed into events(hook with the application) and console(blockchain).
+    > In app.js, eventHandler(ctx, fireEvent) is executed when listen to "Fire", and if fail, will push "err" in console.log
+    > In petrinet.js, if not find "err" when listening, then record the event
 - CreateFunctionTransition
-
+  - Function transitions can transfer data through "params"
+  - TODO: make use of this function to record vote results
 ##### Questions
 - Why the number of token in a place is limited to one, line 40, function "isSpaceInPlace"
 > The assumption of Petrinet 
@@ -83,4 +91,7 @@
 > Tokens themselves contains data (helpFun "Generate token")
 - In the Def of Petrinet, where does function "GenerateToken(...)" is used?
 - Line 287 and 288, connect to apps.js, but not very clear
+- Line 843-865: CreateWebhookTransition
+  - Used in Line 535 of app.js
+  - Don't know what is the actual function of it
 

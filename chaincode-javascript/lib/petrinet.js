@@ -3,6 +3,7 @@
 const { Contract } = require('fabric-contract-api');
 const jwt = require('jsonwebtoken');
 
+//Get asset by key
 async function getAssetJSON(ctx, key) {
   const asset = await ctx.stub.getState(key);
   if (!asset || asset.length === 0) {
@@ -15,8 +16,8 @@ async function putAssetJSON(ctx, key, asset) {
   await ctx.stub.putState(key, Buffer.from(JSON.stringify(asset)));
 }
 
+//Get the destination based on arc's id
 function getOutputsById(net, id) {
-  //Todo: get the destination based on arc's id
   return net.arcs
     .filter((arc) => {
       return arc.src.id === id; //strict comparison: same type (as well as the same value)
@@ -26,8 +27,8 @@ function getOutputsById(net, id) {
     });
 }
 
+//Get the source based on arc's id
 function getInputsById(net, id) {
-  //Todo: get the source based on arc's id
   return net.arcs
     .filter((arc) => {
       return arc.dst.id === id;
@@ -37,8 +38,8 @@ function getInputsById(net, id) {
     });
 }
 
+//Check if Place can accept tokens.
 function isSpaceInPlace(net, place) {
-  //TODO: Check if Place can accept tokens.
   return place.tokens.length < net.k; // net.k = 1; each place can only accept 1 token
 }
 
@@ -323,7 +324,8 @@ class Petrinet extends Contract {
     const effectedPlaces = [];
     const events = [];
 
-    const inputPromises = getInputsById(net, transitionId)
+    // Remove the token from the place which triggers the transition
+    const inputPromises = getInputsById(net, transitionId) // get the inout place by transition
       .filter((p) => {
         return p.type === 'place';
       })
@@ -353,7 +355,8 @@ class Petrinet extends Contract {
         await ctx.stub.putState(placeKey, Buffer.from(JSON.stringify(place)));
       });
 
-    const outputPromises = getOutputsById(net, transitionId)
+    // Put the token at the output place of the transition
+    const outputPromises = getOutputsById(net, transitionId) // get the output place by transition
       .filter((p) => {
         return p.type === 'place';
       })
@@ -424,17 +427,17 @@ class Petrinet extends Contract {
                 //const ips = await Promise.all(inputPlaces)
                 Promise.all(inputPlaces)
                   .then((ips) => {
-                    const mustFire = ips.every((t) => {
+                    const mustFire = ips.every((t) => { // #transitions need to fire
                       //console.log(`Places: ${JSON.stringify(t)}`);
                       return t.tokens.length > 0;
                     });
 
                     if (mustFire) {
-                      const transitionKey = ctx.stub.createCompositeKey(
+                      const transitionKey = ctx.stub.createCompositeKey( // the transitions that need to fire
                         that.name,
                         ['transition', t.id]
                       );
-                      getAssetJSON(ctx, transitionKey)
+                      getAssetJSON(ctx, transitionKey) // get data of the transition
                         .then((transition) => {
                           const inputTokens = [].concat.apply(
                             [],
@@ -861,13 +864,8 @@ class Petrinet extends Contract {
     return transition;
   }
 
-  async CreateFunctionTransition(
-    ctx,
-    transitionId,
-    functionName,
-    params,
-    owner
-  ) {
+  // Function transition can transfer data through params.
+  async CreateFunctionTransition(ctx, transitionId,functionName, params, owner) {
     const key = ctx.stub.createCompositeKey(this.name, [
       'transition',
       transitionId,
