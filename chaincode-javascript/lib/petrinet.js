@@ -300,13 +300,7 @@ class Petrinet extends Contract {
     };
   }
 
-  async CompleteTransition(
-    ctx,
-    netId,
-    transitionId,
-    tokenIds,
-    transitionOutputData
-  ) {
+  async CompleteTransition(ctx, netId, transitionId, tokenIds, transitionOutputData) {
     const that = this;
     const myOrgId = ctx.clientIdentity.getMSPID();
     const netKey = ctx.stub.createCompositeKey(this.name, ['net', netId]);

@@ -26,6 +26,7 @@ function verifyJWT(keys, token) {
                 });
         });
 }
+
 const f = {
 	alert: function(ctx, args, inputTokens) {
 		return new Promise((resolve, reject) => {

@@ -29,13 +29,35 @@
 - Lots of constant are defined in other files "'../../test-application3/javascript/CAUtil.js'"
 - Environmental files?
 
+#### api.js
+- sync with the webpage, for demo
+- Organizations on block chain are built by functions within Hyperledger Fabric
+> An concrete example: https://zhiqich.github.io/2021/03/06/hyperledgerfabric/#Sample-Application
++ Line 41
+```
+buildCCPOrg = (options['org-number'] == 1) ? AppUtils.buildCCPOrg1 : AppUtils.buildCCPOrg2
+```
++ Line 161-208: Function initGatewayForOrg
+
+- Line 269-280, completeTransition: show the log in console about submitting the transaction that needs to be completed
+
+- Secret might be in "PutRemoveTokens" in petrinet.js and app.js
+
+#### Questions
+- Where does function **getKeys** is used?
+- Function **loadModulers**, do not know what is this function for
+- Function **initAmqp** seems unused as well, amqp is replaced by mqtt?
+- Function **checkAsset** seems unused, colored Petrinet?
+- In petrinet.js, Line 313, the function of **completeTransition** is realized by **getAssetJASON** + **if judgement**
+- Function **createAndMoveToken** seems unused.
+  > In petrinet.js, there is a function **PutToken**
+- app.js, Line 635, what is "event"?
+
+
 #### run_orgi.sh
 - the command of running
 
-#### api.js
-- sync with the webpage, for demo
-
-#### web.js
+#### web.js (This one seems not for work4, but work1)
 - amqp, the network layer
 
 #### Questions
@@ -71,7 +93,7 @@
 - CompleteTransition
   - Line 328-355: Remove the token from the inplace which triggers the transition
   - Line 358-404: Put the token at the outplace of the transition 
-    - Line 372-386: **generate token**. //TODO: use generate token for the evaluation, instead of use tokenArray.pop()
+    - Line 372-386: **generate token**. //TODO: create a new token "Vote done"
   - Line 406-472: record the transition that is to be fired
   - Line 480-505: record the fired transition
     > In petrinet.js, "Fire" is pushed into events(hook with the application) and console(blockchain).

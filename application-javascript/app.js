@@ -131,6 +131,7 @@ const queue = async.queue(function(task, cb) {
 
 }, 1);
 
+// This function seems not used
 async function initAmqp(config) {
 	try {
 		const conn = await amqp.connect('amqp://' + config.login + ":" + config.password + "@" + config.host)
@@ -156,6 +157,7 @@ async function initAmqp(config) {
 
 //initAmqp(config)
 
+// Initialize gateway, organizations are on febric chain
 async function initGatewayForOrg(useCommitEvents) {
 	console.log(`${GREEN}--> Fabric client user & Gateway init: Using Org1 identity to Org1 Peer${RESET}`);
 	// build an in memory object with the network configuration (also known as a connection profile)
@@ -205,6 +207,7 @@ async function initGatewayForOrg(useCommitEvents) {
 	}
 }
 
+
 function checkAsset(org, resultBuffer, color, size, owner, appraisedValue, price) {
 	console.log(`${GREEN}<-- Query results from ${org}${RESET}`);
 
@@ -247,6 +250,7 @@ function checkAsset(org, resultBuffer, color, size, owner, appraisedValue, price
 	}
 }
 
+// show the transactionData reading from the fabric chain
 function showTransactionData(transactionData) {
 	const creator = transactionData.actions[0].header.creator;
 	console.log(`    - submitted by: ${creator.mspid}-${creator.id_bytes.toString('hex')}`);
@@ -261,7 +265,7 @@ function showTransactionData(transactionData) {
 	}
 }
 
-// Define events: CompleteTransition
+// show the log in console about submitting the transaction that needs to be completed
 async function completeTransition(ctx, netId, transitionId, tokenIds, outputData) {
 	try {
 		console.log(`${GREEN}--> Submit Transaction: completeTransition, ${transitionId}, ${netId} with output tokens ${tokenIds}`);
@@ -341,6 +345,7 @@ async function handleNewNet(ctx, event) {
 	}
 }
 
+// help function
 function submit(ctx, name, ...args) {
 	return async.retry({times:50, interval: 5000}, function(cb){
 		const transaction = ctx.contract.createTransaction(name);
@@ -355,6 +360,7 @@ function submit(ctx, name, ...args) {
 	});
 }
 
+//
 function eventHandler(ctx, event) {
 	try {
 		const asset = JSON.parse(event.payload.toString('utf8'));
@@ -619,7 +625,7 @@ async function main() {
 					// show the information available with the event
 					console.log(`*** Event: ${event.eventName}:${asset.id}`);
 					// notice how we have access to the transaction information that produced this chaincode event
-					const eventTransaction = event.getTransactionEvent();
+					const eventTransaction = event.getTransactionEvent(); // Fabrix-network function
 					console.log(`*** transaction: ${eventTransaction.transactionId} status:${eventTransaction.status}`);
 					showTransactionData(eventTransaction.transactionData);
 					// notice how we have access to the full block that contains this transaction
