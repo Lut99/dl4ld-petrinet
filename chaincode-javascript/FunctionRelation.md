@@ -8,9 +8,19 @@
 - Nothing special
 
 #### plugins
-- functionHandler.js
-  - Def the functions of actions of transitions
-- webhookHandler.js
+- When the petrinet executes a transition, it can be of multiple types (i.e., the "type" field in the "action" field in the transitions in `org1petrinet_config.json`)
+- Depending on the type, the appropriate file in plugins is called (they have their identifier defined in `const type` in that file)
+- Currently, it can be one of two types:
+  + `nl.dl4ld.webhook` -> `webhookHandler.js`
+  + `nl.dl4ld.function` -> `functionHandler.js`
+- For functions:
+  + There can be multiple types of functions, differentiated by the `functionName` field in the petrinet config file.
+  + Currently, the following functions exist:
+    - `alert`: Simply writes to the console that it has been fired (with input tokens)
+    - `docker`: Calls a Docker container
+      + What it does: searches for a input token with name `DATA`. Then, it creates a message to create a new container with a certain name, command, and input, the latter of which is the contents of the `DATA` token. Finally, this is published using `client.publish(...)`. So essentially, this DATA token is the input to the `docker` function.
+    - `validate`:
+    - `genToken`:
 
 #### **orgXpetrinet_config.json**
 - Define Petri nets (the workflow)
@@ -41,7 +51,26 @@ buildCCPOrg = (options['org-number'] == 1) ? AppUtils.buildCCPOrg1 : AppUtils.bu
 
 - Line 269-280, completeTransition: show the log in console about submitting the transaction that needs to be completed
 
-- Secret might be in "PutRemoveTokens" in petrinet.js and app.js
+- Line 364-439, eventHandler <=> events.push type: 'X'
+  + asset.eventName == "PutRemoveTokens" <=> Fire (X)
+  > petrinet.js: push events into 'events'
+  > eventEmitter.emit(X) send to mqtt of networklayer -- request
+  + asset.eventName == "CompleteTransition" <=> X = CompleteTransition
+  + asset.eventName == "PutToken" <=> X = PutToken
+  + asset.eventName == "RemoveToken" <=> X = RemoveToken
+  + asset.eventName == "Fire" <=> X = RemoveToken
+
+- Line 444+ main function
+  + Line 454: register on Fabric
+    + Line 499-510: create places asset
+    + Line 513-525: create tokens asset
+    + Line 528-554: create transitions asset
+    + Line 557-581: create PetriNet
+    + Line 583-618:
+  + Line 695-718 create server by socket
+    + Line 782-793 eventEmiter.on(X) -- processing on event from mqtt
+    + socket.emit(X) -- send event to server/socket
+    +
 
 #### Questions
 - Where does function **getKeys** is used?
@@ -51,7 +80,8 @@ buildCCPOrg = (options['org-number'] == 1) ? AppUtils.buildCCPOrg1 : AppUtils.bu
 - In petrinet.js, Line 313, the function of **completeTransition** is realized by **getAssetJASON** + **if judgement**
 - Function **createAndMoveToken** seems unused.
   > In petrinet.js, there is a function **PutToken**
-- app.js, Line 635, what is "event"?
+- app.js, Line 635, what is "event"? why in app.js is 'event', in petrinet.js is 'events'
+  > const asset = JSON.parse(event.payload.toString('utf8'));
 
 
 #### run_orgi.sh

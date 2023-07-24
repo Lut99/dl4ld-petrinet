@@ -114,16 +114,16 @@ const f = {
 
 // eventHandler(context, event)
 function handler(ctx, event) {
-        try {
-                const asset = JSON.parse(event.payload.toString('utf8'));
-		//const eventTransaction = event.getTransactionEvent();
-		const functionName = asset.action.functionName;
-		const inputTokens = asset.inputTokens
-		return f[functionName](ctx, asset.action.params, inputTokens)		
-		//return callWebhook(ctx, asset.action.uri, {}, { transactionId: eventTransaction.transactionId, type: "event", user: ctx.userId, org: ctx.orgMSP }, asset)
-        } catch (eventError) {
-		throw new Error(eventError)
-        }
+    try {
+        const asset = JSON.parse(event.payload.toString('utf8'));
+        //const eventTransaction = event.getTransactionEvent();
+        const functionName = asset.action.functionName;
+        const inputTokens = asset.inputTokens
+        return f[functionName](ctx, asset.action.params, inputTokens)
+        //return callWebhook(ctx, asset.action.uri, {}, { transactionId: eventTransaction.transactionId, type: "event", user: ctx.userId, org: ctx.orgMSP }, asset)
+    } catch (eventError) {
+        throw new Error(eventError)
+    }
 }
 
 module.exports = function(moduleHolder) {

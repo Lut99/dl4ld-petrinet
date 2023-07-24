@@ -347,7 +347,7 @@ async function handleNewNet(ctx, event) {
 
 // help function
 function submit(ctx, name, ...args) {
-	return async.retry({times:50, interval: 5000}, function(cb){
+	return async.retry({times:50, interval: 5000}, function(cb){// cb: callback function
 		const transaction = ctx.contract.createTransaction(name);
 		transaction.submit(...args)
 		.then(response => {
@@ -360,7 +360,7 @@ function submit(ctx, name, ...args) {
 	});
 }
 
-//
+//send to event requests to eventEmitter
 function eventHandler(ctx, event) {
 	try {
 		const asset = JSON.parse(event.payload.toString('utf8'));
@@ -396,7 +396,7 @@ function eventHandler(ctx, event) {
 				handleNewNet(ctx, event);
 				break;
 			case "Fire":
-				// TODO serialize this qith queue
+				// TODO serialize this with queue
 				//const eventTransaction = event.getTransactionEvent();
 				if(asset.owner == orgMSP) {
 					const handler = moduleHolder[asset.action.type]
@@ -731,7 +731,7 @@ async function main() {
 	}
 
 	io.on('connection', async function(socket) {
-	    console.log('Client connected...');
+	    console.log('iClent connected...');
 		sockets.push(socket)
 		try {
 			// Send identity
